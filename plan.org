@@ -1,7 +1,7 @@
 
 #+TITLE: Plan
 
-TODO Modify workflow to use rust image and build binary
-TODO Modify Dockerfile to build image with rust binary
+* TODO Modify workflow to use rust image and build binary
+* TODO Modify Dockerfile to build image with rust binary
 
 # dkfd

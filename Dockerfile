@@ -1,5 +1,5 @@
 # Use an busybox latest as parent image
-FROM busybox:latest
+FROM rust:latest
 
 # Set the working directory to /app
 WORKDIR /app

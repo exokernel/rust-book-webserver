@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: python-example
+  name: rust-book-webserver
   labels:
-    app: python-example
+    app: rust-book-webserver
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: python-example
+      app: rust-book-webserver
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -17,13 +17,13 @@ spec:
   template:
     metadata:
       labels:
-        app: python-example
+        app: rust-book-webserver
     spec:
       containers:
-      - name: python-example
+      - name: rust-book-webserver
         image: <IMAGE>
         ports:
-        - containerPort: 80
+        - containerPort: 7878
         resources:
           requests:
             cpu: 100m
@@ -33,13 +33,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: python-example-service
+  name: rust-book-webserver-service
 spec:
   type: LoadBalancer
   ports:
     - name: http
       protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 7878
+      targetPort: 7878
   selector:
-    app: python-example
+    app: rust-book-webserver

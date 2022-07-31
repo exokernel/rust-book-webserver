@@ -37,20 +37,29 @@ jobs:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     # Build Rust binary here
+    - name: Install latest rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        default: true
+        override: true
+
+    - name: Build
+      run: cargo build --all --release && strip target/release/rust-book-webserver
 
     # Build a Docker image of your application in your registry and tag the image with the $GITHUB_SHA.
     - name: Build container image
-      run: docker build -t ${{ secrets.REGISTRY_NAME }}/python-example:$(echo $GITHUB_SHA | head -c7) .
+      run: docker build -t ${{ secrets.REGISTRY_NAME }}/rust-book-webserver:$(echo $GITHUB_SHA | head -c7) .
 
     - name: Log in to DigitalOcean Container Registry with short-lived credentials
       run: doctl registry login --expiry-seconds 1200
 
     - name: Push image to DigitalOcean Container Registry
-      run: docker push ${{ secrets.REGISTRY_NAME }}/python-example:$(echo $GITHUB_SHA | head -c7)
+      run: docker push ${{ secrets.REGISTRY_NAME }}/rust-book-webserver:$(echo $GITHUB_SHA | head -c7)
 
     # Deploy to DigitalOCcean Kubernetes.
     - name: Update deployment file
-      run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ secrets.REGISTRY_NAME }}/python-example:'${TAG}'|' $GITHUB_WORKSPACE/config/deployment.yml
+      run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|${{ secrets.REGISTRY_NAME }}/rust-book-webserver:'${TAG}'|' $GITHUB_WORKSPACE/config/deployment.yml
 
     - name: Save DigitalOcean kubeconfig with short-lived credentials
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ secrets.CLUSTER_NAME }}
@@ -67,4 +76,4 @@ jobs:
       run: kubectl apply -f $GITHUB_WORKSPACE/config/deployment.yml
 
     - name: Verify deployment
-      run: kubectl rollout status deployment/python-example
+      run: kubectl rollout status deployment/rust-book-webserver

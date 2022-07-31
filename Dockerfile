@@ -11,4 +11,4 @@ ADD target/release/rust-book-webserver /app
 EXPOSE 7878
 
 # Run server.py when the container launches
-CMD ["rust-book-webserver"]
+CMD ["./rust-book-webserver"]

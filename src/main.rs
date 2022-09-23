@@ -23,7 +23,15 @@ fn handle_connection(mut stream: TcpStream) {
 
     println!("Request: {:#?}", http_request);
 
-    let response = format!("HTTP/1.1 200 OK\r\n\r\n{}\r\n", ip);
+
+    let status_line = "HTTP/1.1 200 OK";
+    let contents = format!("{}\r\n", ip);
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    //let response = format!("HTTP/1.1 200 OK\r\n\r\n{}\r\n", ip);
 
     stream.write_all(response.as_bytes()).unwrap();
 }

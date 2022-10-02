@@ -32,10 +32,7 @@ fn handle_connection(mut stream: TcpStream) {
     let contents = format!("{}\r\n", ip);
     let length = contents.len();
 
-    let response =
-        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
-
-    //let response = format!("HTTP/1.1 200 OK\r\n\r\n{}\r\n", ip);
+    let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
 
     stream.write_all(response.as_bytes()).unwrap();
 }
